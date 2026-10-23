@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Professional, responsive Tip Calculator web application. Calculate tips, bill totals, and split payments per person accurately in real-time.">
+  <meta name="keywords" content="tip calculator, bill split, split bill, tip per person, gratuity calculator">
+  <title>Tip Calculator — Smart Bill Splitting & Tip Calculation</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-wrapper">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="badge">
+        <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+          <path d="M12 6v2"></path>
+          <path d="M12 16v2"></path>
+        </svg>
+        <span>Web Development • Task 23</span>
+      </div>
+      <h1 class="app-title">Tip Calculator</h1>
+      <p class="app-subtitle">Calculate tips, split expenses easily, and keep group bills fair and transparent.</p>
+    </header>
+
+    <!-- Main Calculator App -->
+    <main class="calculator-container">
+      <div class="calculator-card">
+        
+        <!-- Left Side: Inputs Form -->
+        <section class="inputs-section" aria-label="Bill and Tip Inputs">
+          <form id="calculator-form" onsubmit="return false;" novalidate>
+            
+            <!-- Bill Amount Input -->
+            <div class="form-group" id="bill-group">
+              <div class="label-wrapper">
+                <label for="bill-amount">Bill Amount</label>
+                <span class="currency-indicator" id="currency-tag">INR (₹)</span>
+              </div>
+              <div class="input-control">
+                <span class="input-icon" id="bill-currency-symbol" aria-hidden="true">₹</span>
+                <input 
+                  type="number" 
+                  id="bill-amount" 
+                  name="bill-amount"
+                  placeholder="0.00" 
+                  min="0" 
+                  step="any"
+                  inputmode="decimal"
+                  autocomplete="off"
+                  aria-describedby="bill-error"
+                  required
+                >
+              </div>
+              <div class="error-container">
+                <p id="bill-error" class="error-message" role="alert" aria-live="polite"></p>
+              </div>
+            </div>
+
+            <!-- Tip Percentage Selection -->
+            <fieldset class="form-group tip-fieldset" id="tip-group">
+              <div class="label-wrapper">
+                <legend class="form-label">Select Tip %</legend>
+                <span class="tip-selected-badge" id="selected-tip-display" aria-hidden="true">None selected</span>
+              </div>
+              
+              <div class="tip-grid" role="group" aria-label="Tip percentage options">
+                <button type="button" class="tip-btn" data-tip="5" aria-pressed="false">5%</button>
+                <button type="button" class="tip-btn" data-tip="10" aria-pressed="false">10%</button>
+                <button type="button" class="tip-btn" data-tip="15" aria-pressed="false">15%</button>
+                <button type="button" class="tip-btn" data-tip="20" aria-pressed="false">20%</button>
+                <button type="button" class="tip-btn" data-tip="25" aria-pressed="false">25%</button>
+                
+                <div class="custom-tip-wrapper">
+                  <input 
+                    type="number" 
+                    id="custom-tip" 
+                    name="custom-tip"
+                    placeholder="Custom" 
+                    min="0" 
+                    max="100" 
+                    step="any" 
+                    inputmode="decimal"
+                    aria-label="Custom tip percentage"
+                    aria-describedby="tip-error"
+                  >
+                  <span class="custom-percent-symbol" aria-hidden="true">%</span>
+                </div>
+              </div>
+              <div class="error-container">
+                <p id="tip-error" class="error-message" role="alert" aria-live="polite"></p>
+              </div>
+            </fieldset>
+
+            <!-- Number of People Input -->
+            <div class="form-group" id="people-group">
+              <div class="label-wrapper">
+                <label for="people-count">Number of People</label>
+                <span class="split-hint" id="people-hint">Split equally</span>
+              </div>
+              <div class="input-control people-input-control">
+                <span class="input-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </span>
+                <input 
+                  type="number" 
+                  id="people-count" 
+                  name="people-count"
+                  value="1" 
+                  min="1" 
+                  step="1"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  aria-describedby="people-error"
+                  required
+                >
+                <div class="stepper-buttons" aria-label="Adjust people count">
+                  <button type="button" class="stepper-btn" id="decrement-people" aria-label="Decrease people count" title="Decrease">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                  <button type="button" class="stepper-btn" id="increment-people" aria-label="Increase people count" title="Increase">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="error-container">
+                <p id="people-error" class="error-message" role="alert" aria-live="polite"></p>
+              </div>
+            </div>
+
+            <!-- Optional Currency Quick Switcher for Global Convenience -->
+            <div class="currency-toggle-wrapper">
+              <label for="currency-select" class="currency-label">Currency:</label>
+              <select id="currency-select" class="currency-select" aria-label="Select calculation currency">
+                <option value="INR" selected>INR (₹)</option>
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="GBP">GBP (£)</option>
+              </select>
+            </div>
+
+          </form>
+        </section>
+
+        <!-- Right Side: Distinct Results Panel -->
+        <section class="results-section" aria-label="Calculation Summary">
+          <div class="results-header">
+            <h2 class="results-heading">Calculation Summary</h2>
+            <span class="status-indicator" id="calc-status">Live calculations</span>
+          </div>
+
+          <!-- Results Cards Grid -->
+          <div class="results-display">
+            <!-- Tip Amount -->
+            <div class="result-row">
+              <div class="result-meta">
+                <span class="result-title">Tip Amount</span>
+                <span class="result-subtext">Total tip for bill</span>
+              </div>
+              <div class="result-value" id="tip-amount">₹0.00</div>
+            </div>
+
+            <!-- Total Bill -->
+            <div class="result-row">
+              <div class="result-meta">
+                <span class="result-title">Total Bill</span>
+                <span class="result-subtext">Bill + total tip</span>
+              </div>
+              <div class="result-value" id="total-bill">₹0.00</div>
+            </div>
+
+            <div class="results-divider" role="separator" aria-hidden="true"></div>
+
+            <!-- Tip Per Person -->
+            <div class="result-row">
+              <div class="result-meta">
+                <span class="result-title">Tip / Person</span>
+                <span class="result-subtext">Individual tip share</span>
+              </div>
+              <div class="result-value" id="tip-per-person">₹0.00</div>
+            </div>
+
+            <!-- Total Per Person (Featured Hero) -->
+            <div class="result-row highlight-row">
+              <div class="result-meta">
+                <span class="result-title">Total / Person</span>
+                <span class="result-subtext">Amount to pay each</span>
+              </div>
+              <div class="result-value hero-value" id="total-per-person">₹0.00</div>
+            </div>
+          </div>
+
+          <!-- Formula Info Note -->
+          <div class="results-footnote" id="results-footnote">
+            <span>Enter a bill amount and select a tip percentage to calculate.</span>
+          </div>
+
+          <!-- Reset Button -->
+          <button type="button" id="reset-btn" class="reset-btn" disabled>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            <span>Reset Calculator</span>
+          </button>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Tip Calculator • Built with Semantic HTML5, CSS3 &amp; Vanilla JavaScript</p>
+    </footer>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
